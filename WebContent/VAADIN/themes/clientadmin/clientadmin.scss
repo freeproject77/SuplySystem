@@ -1,0 +1,57 @@
+// Global variable overrides. Must be declared before importing Valo.
+
+// Defines the plaintext font size, weight and family. Font size affects general component sizing.
+//$v-font-size: 16px;
+//$v-font-weight: 300;
+//$v-font-family: "Open Sans", sans-serif;
+
+// Defines the border used by all components.
+//$v-border: 1px solid (v-shade 0.7);
+//$v-border-radius: 4px;
+
+// Affects the color of some component elements, e.g Button, Panel title, etc
+//$v-background-color: hsl(210, 0%, 98%);
+// Affects the color of content areas, e.g  Panel and Window content, TextField input etc
+//$v-app-background-color: $v-background-color;
+
+// Affects the visual appearance of all components
+//$v-gradient: v-linear 8%;
+//$v-bevel-depth: 30%;
+//$v-shadow-opacity: 5%;
+
+// Defines colors for indicating status (focus, success, failure)
+//$v-focus-color: valo-focus-color(); // Calculates a suitable color automatically
+//$v-friendly-color: #2c9720;
+//$v-error-indicator-color: #ed473b;
+
+// For more information, see: https://vaadin.com/book/-/page/themes.valo.html
+// Example variants can be copy/pasted from https://vaadin.com/wiki/-/wiki/Main/Valo+Examples
+
+@import "../reindeer/reindeer.scss";
+
+v-panel-main {
+    border-style:solid;
+    border-width:1px;
+    border-color:black;
+    overflow: hidden;
+}
+
+@mixin clientadmin {
+  @include reindeer;
+
+  // Insert your own theme rules here
+  .v-panel-main {
+    border-style:solid;
+    border-width:1px;
+    border-color: darkgray;
+    overflow: hidden;
+    box-shadow: 10px 10px 5px #888888;
+  }
+  .label-bold {
+    font-weight:bold;
+  }
+  .backcolor { background: linear-gradient(to top, #f0f0f0, #d0d0d0);}
+  .panel-header-color {background: linear-gradient(to right, #596a72 0%,#cedce7 100%);}
+} 
+
+

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="windows-1251"?>
+<project name="testapp" basedir="." default="build">
+	<dirname property="prj_root" file="${ant.file}"/>
+        <property name="root" value="${prj_root}"/>
+	<property file="local.properties"/>
+	<property name = "compiler.source" value="1.7"/>
+        <property name = "compiler.verbose" value="false"/>
+        <property name = "compiler.encoding" value="utf8"/>
+        <property name = "compiler.target" value="1.7"/>
+        <property name = "compiler.debuglevel" value="lines,vars,source"/>
+        <property name = "compiler.debug" value="on"/>
+        <property name = "compiler.compiler" value="javac1.7"/>
+	<property name = "findbugs.report.format" value="html"/>
+        <property name="distrib_filename" value="TestApp.war"/>
+	<condition property="doc_dir" value="${prj_root}/doc">
+    		<not>
+			<isset property="doc_dir"/>				
+      		</not>
+	</condition>
+        <condition property="distrib_dir" value="${prj_root}/distrib">
+    		<not>
+			<isset property="distrib_dir"/>				
+      		</not>
+	</condition>
+        <condition property="source_dir" value="${prj_root}/src">
+    		<not>
+			<isset property="source_dir"/>				
+      		</not>
+	</condition>
+	<condition property="res_dir" value="${prj_root}/res">
+    		<not>
+			<isset property="res_dir"/>				
+      		</not>
+	</condition>
+        <target name="init">
+	        <echo>Инициализация всех внутренних параметров</echo>
+		
+		<property name="lib_dir" value="${prj_root}/lib"/>
+		<property name="app_dir" value="${root}/applications"/>
+		<property name="webcontent_dir" value="${prj_root}/WebContent"/>
+		<property name="webinf_res_dir" value="${webcontent_dir}/WEB-INF"/>
+		<property name="vaadin_res_dir" value="${webcontent_dir}/VAADIN"/>
+
+                <property name="temp_dir" value="${distrib_dir}/temp"/>
+		<property name="war_vaadin_dir" value="${temp_dir}/VAADIN"/>
+		<property name="war_webinf_dir" value="${temp_dir}/WEB-INF"/>
+		<property name="classes_dir" value="${war_webinf_dir}/classes"/>
+		<property name="war_lib_dir" value="${war_webinf_dir}/lib"/>
+		<path id="lib.classpath">
+			<fileset dir="${lib_dir}">
+            			 <include name="**/*.jar"/>
+        		</fileset>
+		</path>
+	</target>
+        <!-- Удаляем все "ненужные" дириктории, приводя к первоначальному виду -->
+        <target name="clean" depends="init">
+		<echo>Удаляем все содержимое из каталогов ${temp_dir}, ${distrib_dir}</echo>
+		<delete dir="${temp_dir}" verbose="${verbose}"/>
+                <delete dir="${doc_dir}" verbose="${verbose}"/>
+		<delete dir="${distrib_dir}" verbose="${verbose}"/>
+	</target>
+        <target name="build" depends="init">
+                <antcall target="compile"/>
+		<antcall target="package"/>
+		<!--
+                <antcall target="obfuscate"/>
+		-->
+                <echo>Удаляем временную директорию ${temp_dir}</echo>
+                <delete dir="${temp_dir}" verbose="${verbose}" failonerror="false"/>
+
+        </target>
+        <target name="compile" depends="init,clean">
+        	<echo>Начало компиляции в ${source_dir}</echo>
+        	<echo>Создаем директорию ${temp_dir}</echo>
+                <mkdir dir="${temp_dir}"/>
+		<mkdir dir="${war_vaadin_dir}"/>
+		<mkdir dir="${war_webinf_dir}"/>
+		<mkdir dir="${classes_dir}"/>
+		<mkdir dir="${war_lib_dir}"/>
+                
+        	<javac destdir="${classes_dir}" verbose="${compiler.verbose}"
+	               encoding="${compiler.encoding}" classpathref="lib.classpath"
+                       source="${compiler.source}" target="${compiler.target}"
+                       compiler="${compiler.compiler}" debug ="${compiler.debug}"
+		>
+		 <src path="${source_dir}"/>
+		 <include name="**/*.java"/> 
+	</javac>
+	
+
+	</target>
+        <target name="package">
+		<!-- Создаем jar файл -->
+        	<echo>Создаем директорию ${distrib_dir}</echo>
+        	<mkdir dir="${distrib_dir}"/>
+        	<echo>Пакуем файл: ${distrib_filename}</echo>
+		
+		<copy todir="${classes_dir}">
+		    <fileset dir="${source_dir}/main/java">
+			<include name="**/*.properties"/>
+		    </fileset>
+		</copy>
+		<copy todir="${war_webinf_dir}">
+		    <fileset dir="${webinf_res_dir}">
+			<include name="**/*.xml"/>
+		    </fileset>
+		</copy>
+		<copy todir="${war_lib_dir}">
+		    <fileset dir="${lib_dir}/vaadin">
+			<include name="**/*.jar"/>
+		    </fileset>
+		</copy>
+		<copy todir="${war_lib_dir}">
+		    <fileset dir="${lib_dir}/spring">
+			<include name="**/*.jar"/>
+		    </fileset>
+		</copy>
+		<copy todir="${war_lib_dir}">
+		    <fileset dir="${lib_dir}">
+			<include name="*.jar"/>
+		    </fileset>
+		</copy>
+		<copy todir="${war_vaadin_dir}">
+		    <fileset dir="${vaadin_res_dir}">
+			<include name="**/*"/>
+		    </fileset>
+		</copy>
+		
+        	<jar jarfile="${distrib_dir}/${distrib_filename}"
+                     manifest="${res_dir}/MANIFEST.MF"
+                >            
+			<fileset dir="${temp_dir}">
+			    <include name="**/*"/> 
+			</fileset>
+		</jar>
+	</target>
+	<target name="doc" depends="init">
+            <echo>If you have any problems with the tools under Windows, just unset the environment variable CLASS_PATH (remove a value)</echo>	
+	    <echo>Java doc is generating</echo>
+	    <mkdir dir="${doc_dir}"/>
+	    <javadoc destdir="${doc_dir}" classpathref="lib.classpath">
+		 <fileset dir="${source_dir}">
+		    <include name="**/*.java"/>
+		 </fileset>
+	    </javadoc>
+	</target>
+</project>

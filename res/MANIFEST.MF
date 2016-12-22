@@ -1,0 +1,2 @@
+Manifest-Version: 1.0
+Class-Path: WEB-INF\lib\vaadin\vaadin-client-7.7.6.jar WEB-INF\lib\vaadin\vaadin-client-compiled-7.7.6.jar WEB-INF\lib\vaadin\vaadin-client-compiler-7.7.6.jar WEB-INF\lib\vaadin\vaadin-push-7.7.6.jar WEB-INF\lib\vaadin\vaadin-server-7.7.6.jar WEB-INF\lib\vaadin\vaadin-shared-7.7.6.jar WEB-INF\lib\vaadin\vaadin-spring-1.1.1.jar WEB-INF\lib\vaadin\vaadin-themes-7.7.6.jar WEB-INF\lib\vaadin\vaadin-widgets-7.7.6.jar
